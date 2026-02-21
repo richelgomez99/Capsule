@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 20% 4%;
+    --foreground: 240 5% 90%;
+
+    --card: 240 15% 8%;
+    --card-foreground: 240 5% 90%;
+
+    --popover: 240 15% 8%;
+    --popover-foreground: 240 5% 90%;
+
+    --primary: 36 90% 55%;
+    --primary-foreground: 240 20% 4%;
+
+    --secondary: 240 10% 12%;
+    --secondary-foreground: 240 5% 90%;
+
+    --muted: 240 5% 18%;
+    --muted-foreground: 240 4% 46%;
+
+    --accent: 36 90% 55%;
+    --accent-foreground: 240 20% 4%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 5% 15%;
+    --input: 240 5% 15%;
+    --ring: 36 90% 55%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 240 15% 6%;
+    --sidebar-foreground: 240 5% 90%;
+    --sidebar-primary: 36 90% 55%;
+    --sidebar-primary-foreground: 240 20% 4%;
+    --sidebar-accent: 240 10% 12%;
+    --sidebar-accent-foreground: 240 5% 90%;
+    --sidebar-border: 240 5% 15%;
+    --sidebar-ring: 36 90% 55%;
+
+    /* Semantic colors */
+    --score-green: 142 71% 45%;
+    --score-red: 0 84% 60%;
+    --pii-warning: 38 92% 50%;
+    --info-blue: 217 91% 60%;
+
+    /* Category colors */
+    --cat-code: 217 92% 76%;
+    --cat-recipe: 24 96% 62%;
+    --cat-error: 0 94% 71%;
+    --cat-docs: 263 70% 76%;
+    --cat-reference: 215 14% 64%;
+    --cat-research: 215 14% 64%;
+    --cat-communication: 168 75% 52%;
+    --cat-shopping: 168 75% 52%;
+    --cat-personal: 142 69% 58%;
+
+    /* Feed card accents */
+    --feed-protection: 0 84% 60%;
+    --feed-insight: 36 90% 55%;
+    --feed-learning: 217 91% 60%;
+    --feed-captured: 142 71% 45%;
+    --feed-forgotten: 240 4% 46%;
+    --feed-synthesis: 263 70% 76%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  .glow-amber {
+    box-shadow: 0 0 20px -5px hsl(36 90% 55% / 0.15);
+  }
+  
+  .glow-amber-hover {
+    box-shadow: 0 0 30px -5px hsl(36 90% 55% / 0.25);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300;
+  }
+  .card-hover:hover {
+    border-color: hsl(36 90% 55% / 0.3);
+    box-shadow: 0 0 30px -10px hsl(36 90% 55% / 0.15);
+  }
+
+  .pulse-green {
+    animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(240 5% 18%) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(240 5% 18%);
+    border-radius: 3px;
+  }
+}

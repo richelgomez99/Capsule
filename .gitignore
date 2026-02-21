@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.venv13/
+*.egg-info/
+
+# Env
+.env
+.env.local
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.windsurf/
+.specstory/
+.specify/
+.cursor*
+
+# Data (too large for git)
+output/screenshots/
+output/actions/
+
+# Archives
+*.zip
+Photos-*/

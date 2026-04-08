@@ -26,6 +26,12 @@ Thumbs.db
 # Data (too large for git)
 output/screenshots/
 output/actions/
+data/uploads/
+data/actions/
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
 
 # Archives
 *.zip

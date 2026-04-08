@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Activity, BookOpen, Brain, MessageSquare, Trophy, Settings, Menu, X } from "lucide-react";
+import { Activity, BookOpen, Brain, MessageSquare, Trophy, Settings, Menu, X, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/", icon: Activity, label: "Feed" },
+  { to: "/capture", icon: Upload, label: "Capture" },
   { to: "/knowledge", icon: BookOpen, label: "Knowledge" },
   { to: "/chat", icon: MessageSquare, label: "Chat" },
   { to: "/about-me", icon: Brain, label: "About Me" },
-  { to: "/judge", icon: Trophy, label: "Judge" },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -42,6 +42,33 @@ export const api = {
   getMetrics: () => fetchAPI<any>("/api/metrics"),
   getJudgePanel: () => fetchAPI<any>("/api/judge-panel"),
   streamEvents: () => new EventSource(`${API_BASE}/api/agent/stream`),
+
+  // ── Capture endpoints (new for web app) ──
+  uploadScreenshot: async (file: File): Promise<any> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`${API_BASE}/api/captures/screenshot`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+    return res.json();
+  },
+  submitText: (content: string, source: string = "clipboard") =>
+    fetchAPI<any>("/api/captures/text", {
+      method: "POST",
+      body: JSON.stringify({ content, source }),
+    }),
+  submitUrl: (url: string) =>
+    fetchAPI<any>("/api/captures/url", {
+      method: "POST",
+      body: JSON.stringify({ url }),
+    }),
+  importHistory: (entries: Array<{ url: string; title?: string; visit_time?: string }>) =>
+    fetchAPI<any>("/api/captures/history", {
+      method: "POST",
+      body: JSON.stringify({ entries }),
+    }),
 };
 
 // Category config

@@ -1,6 +1,6 @@
 # Capsule — Your Second Brain That Actually Thinks
 
-Capsule is an autonomous AI agent that captures your digital activity, understands what it finds, protects your sensitive data, surfaces insights you missed, and takes real actions — all without being asked. It gets smarter every day.
+Capsule is an AI-powered web app that captures your digital life, understands what it finds, protects your sensitive data, surfaces insights you missed, and takes real actions — all without being asked. It gets smarter every day.
 
 ## The Problem
 
@@ -8,42 +8,40 @@ Your digital life is scattered across 40+ apps. You screenshot recipes, copy API
 
 ## What Capsule Does
 
-- **Surfaces your data when you ask** — Search across all your saves. Ask "what do I know about my puppy?" and get an answer that pulls from 5 different apps.
+- **Captures your data** — Upload screenshots, paste clipboard content, save URLs, or import browsing history
+- **Surfaces your data when you ask** — Search across all your saves. Ask "what do I know about my puppy?" and get an answer that pulls from 5 different apps
 - **Notices patterns autonomously** — "You research in Chrome, then build in VS Code. Classic research→build cycle."
-- **Protects you automatically** — Catches emails, addresses, API keys and scrubs them before storing.
-- **Takes real actions** — Creates calendar events from flight confirmations, extracts to-do lists, generates weekly digests.
-- **Gets smarter every day** — Checks its own work, critiques low-confidence classifications, and improves without human intervention.
+- **Protects you automatically** — Catches emails, addresses, API keys and flags them before storing
+- **Takes real actions** — Creates calendar events from flight confirmations, extracts to-do lists, generates weekly digests
+- **Gets smarter every day** — Checks its own work, critiques low-confidence classifications, and improves without human intervention
 
 ## Architecture
 
 ```
-Your Saves → Understand (Airia) → Protect (Airia DLP) → Score (Braintrust) → Reflect (Gemini) → Act
-                   ↑                                                              |
-                   └───────────── Retry if confidence < 70% ─────────────────────┘
+Capture (Upload/Paste/URL) → Classify (Gemini) → Protect (PII Detection) → Score (Self-Eval) → Reflect → Act
+           ↑                                                                                        |
+           └──────────────────────── Retry if confidence < 70% ────────────────────────────────────┘
 ```
 
-## Sponsor Tools
-
-| Tool | Role |
-|------|------|
-| **Google Gemini 2.5 Flash + ADK** | LLM backbone — reflection, chat, synthesis, search |
-| **Airia** | Understand Agent (classification) + DLP Agent (data protection) |
-| **Braintrust** | autoevals LLMClassifier — the agent grades its own work |
+**Backend:** Python + FastAPI + SQLite  
+**Frontend:** React + TypeScript + Tailwind CSS + shadcn/ui  
+**AI:** Google Gemini for classification, chat, reflection, and synthesis
 
 ## Quick Start
 
 ### Backend
 ```bash
-# Create .env with your API keys (see .env.template)
+# Create .env with your API key (see .env.template)
 cp .env.template .env
+# Add your GEMINI_API_KEY to .env
 
 # Install dependencies
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# Start the server (instant startup)
-python backend/serve.py
+# Start the server
+uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### Frontend
@@ -53,23 +51,67 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 — the frontend connects to the backend on port 8000.
+Open http://localhost:8080 — the frontend connects to the backend on port 8000.
 
-### Demo Flow
-1. Open the app — feed shows Capsule's analysis of 113 captured items
-2. Click **"Process Today's Saves"** — watch the agent think, decide, and act in real-time
-3. See **real actions** generated (calendar events, to-do lists, weekly digest)
-4. Go to **Chat** — ask "what do you know about my puppy?" — Gemini answers from captured knowledge
-5. Answer the **learning question** — the agent updates its model of you
+### Usage Flow
+1. Go to **Capture** — upload screenshots, paste text, save URLs, or import browsing history
+2. Go to **Feed** → click **"Process Today's Saves"** — watch the agent classify, protect, and act
+3. Go to **Knowledge** — search and browse all your captures
+4. Go to **Chat** — ask questions about your knowledge base
+5. Go to **About Me** — see what the agent has learned about you
+
+## Data Capture Methods
+
+| Method | How |
+|--------|-----|
+| **Screenshots** | Drag & drop, file picker, or Ctrl+V paste |
+| **Text / Clipboard** | Paste any text content — code, notes, copied text |
+| **URLs** | Submit a URL — Capsule fetches and summarizes the page |
+| **Browsing History** | Import a JSON array of browsing history entries |
 
 ## Environment Variables
 
 ```
-GEMINI_API_KEY=your_key
-AIRIA_API_KEY=your_key
-BRAINTRUST_API_KEY=your_key
+GEMINI_API_KEY=your_key     # Required — Google Gemini API key
+```
+
+## Project Structure
+
+```
+├── backend/
+│   ├── app/
+│   │   ├── main.py              # FastAPI application entry
+│   │   ├── database.py          # SQLite database layer
+│   │   ├── models.py            # Pydantic request/response models
+│   │   ├── routers/
+│   │   │   ├── captures.py      # Upload, text, URL, history endpoints
+│   │   │   ├── intelligence.py  # Processing, search, chat endpoints
+│   │   │   └── user.py          # Feed, metrics, feedback endpoints
+│   │   └── services/
+│   │       ├── classifier.py    # Gemini-based classification
+│   │       ├── pii.py           # PII detection (regex patterns)
+│   │       ├── pipeline.py      # Processing pipeline orchestrator
+│   │       └── ocr.py           # OCR for screenshots
+│   └── serve.py                 # Legacy hackathon server (preserved)
+├── frontend/
+│   └── src/
+│       ├── pages/
+│       │   ├── Capture.tsx      # New — data capture UI
+│       │   ├── Feed.tsx         # Dashboard with feed & activity
+│       │   ├── Knowledge.tsx    # Search & browse captures
+│       │   ├── Chat.tsx         # AI chat interface
+│       │   └── AboutMe.tsx      # User model display
+│       └── lib/
+│           └── api.ts           # Backend API client
+├── data/
+│   ├── captures.json            # Seed data (113 captures)
+│   └── app_state_seed.json      # User model seed
+├── docs/
+│   ├── PRD.md                   # Product Requirements Document
+│   └── IMPLEMENTATION_PLAN.md   # Implementation plan
+└── requirements.txt             # Python dependencies
 ```
 
 ## Built With
 
-Python, React, TypeScript, Tailwind CSS, Google Gemini 2.5 Flash, Google ADK, Airia, Braintrust, Vite, shadcn/ui, Framer Motion
+Python, FastAPI, SQLite, React, TypeScript, Tailwind CSS, Google Gemini, Vite, shadcn/ui, Framer Motion

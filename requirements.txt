@@ -1,3 +1,13 @@
-autoevals>=0.0.100
-openai>=1.0.0
-braintrust>=0.0.160
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+python-multipart>=0.0.18
+
+# Database
+aiosqlite>=0.21.0
+
+# Image processing (OCR is optional — install pytesseract separately)
+Pillow>=11.0.0
+
+# Validation
+pydantic>=2.0.0

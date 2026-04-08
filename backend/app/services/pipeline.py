@@ -62,7 +62,7 @@ def _run_pipeline(batch_size: int) -> None:
             content = capture.get("content", "")
 
             # Step 1: Classify
-            db.add_activity("AIRIA", f"Classifying capture {cap_id}...", cap_id)
+            db.add_activity("CLASSIFY", f"Classifying capture {cap_id}...", cap_id)
             result = classifier.classify_content(content, capture.get("type", "text"))
 
             updates = {
@@ -76,7 +76,7 @@ def _run_pipeline(batch_size: int) -> None:
 
             db.update_capture(cap_id, updates)
             db.add_activity(
-                "AIRIA",
+                "CLASSIFY",
                 f"Classified as '{result['category']}' ({result['confidence']:.0%} confident) — {result.get('summary', '')[:80]}",
                 cap_id,
             )
@@ -101,7 +101,7 @@ def _run_pipeline(batch_size: int) -> None:
                 db.add_activity("DLP", f"No PII found in {cap_id} ✓", cap_id)
 
             # Step 3: Self-evaluate
-            db.add_activity("BRAINTRUST", f"Scoring my classification of {cap_id}...", cap_id)
+            db.add_activity("SCORING", f"Scoring my classification of {cap_id}...", cap_id)
             eval_result = classifier.self_evaluate(
                 content, result["category"], result["tags"], result.get("summary", "")
             )
@@ -109,7 +109,7 @@ def _run_pipeline(batch_size: int) -> None:
             confidence = eval_result.get("confidence", result["confidence"])
             db.update_capture(cap_id, {"quality": quality, "confidence": confidence})
             db.add_activity(
-                "BRAINTRUST",
+                "SCORING",
                 f"Quality: {quality} · Confidence: {confidence:.0%} — {eval_result.get('reasoning', '')}",
                 cap_id,
             )

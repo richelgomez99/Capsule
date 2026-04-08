@@ -25,6 +25,24 @@ export default function Capture() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
+  const addResult = useCallback((result: CaptureResult) => {
+    setResults((prev) => [result, ...prev].slice(0, 20));
+  }, []);
+
+  const handleScreenshotUpload = useCallback(async (files: File[]) => {
+    setUploading(true);
+    for (const file of files) {
+      try {
+        const res = await api.uploadScreenshot(file);
+        addResult({ id: res.id, type: "screenshot", message: res.message, has_pii: res.has_pii });
+        toast({ title: "Screenshot captured! 📸", description: res.message });
+      } catch (err) {
+        toast({ title: "Upload failed", description: `Could not upload ${file.name}`, variant: "destructive" });
+      }
+    }
+    setUploading(false);
+  }, [addResult, toast]);
+
   // Global paste handler for screenshots
   useEffect(() => {
     const handlePaste = async (e: ClipboardEvent) => {
@@ -45,25 +63,7 @@ export default function Capture() {
 
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, []);
-
-  const addResult = (result: CaptureResult) => {
-    setResults((prev) => [result, ...prev].slice(0, 20));
-  };
-
-  const handleScreenshotUpload = async (files: File[]) => {
-    setUploading(true);
-    for (const file of files) {
-      try {
-        const res = await api.uploadScreenshot(file);
-        addResult({ id: res.id, type: "screenshot", message: res.message, has_pii: res.has_pii });
-        toast({ title: "Screenshot captured! 📸", description: res.message });
-      } catch (err) {
-        toast({ title: "Upload failed", description: `Could not upload ${file.name}`, variant: "destructive" });
-      }
-    }
-    setUploading(false);
-  };
+  }, [handleScreenshotUpload]);
 
   const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault();
@@ -72,7 +72,7 @@ export default function Capture() {
     if (files.length > 0) {
       await handleScreenshotUpload(files);
     }
-  }, []);
+  }, [handleScreenshotUpload]);
 
   const handleTextSubmit = async () => {
     if (!textContent.trim()) return;

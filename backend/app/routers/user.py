@@ -112,16 +112,23 @@ async def list_actions():
 @router.get("/actions/{filename}")
 async def download_action(filename: str):
     """Download a generated action file."""
+    import os
     from pathlib import Path
     from fastapi.responses import FileResponse
-    actions_dir = Path(__file__).parent.parent.parent.parent / "data" / "actions"
-    filepath = actions_dir / filename
+    from fastapi import HTTPException
 
-    if not filepath.exists() or not filepath.is_file():
-        from fastapi import HTTPException
+    actions_dir = Path(__file__).parent.parent.parent.parent / "data" / "actions"
+
+    # Prevent path traversal by only allowing filenames that exist directly in actions_dir
+    if not actions_dir.exists():
         raise HTTPException(404, "Action file not found")
 
-    return FileResponse(filepath)
+    # List actual files and match by name — never construct path from user input
+    available_files = {f.name: f for f in actions_dir.iterdir() if f.is_file()}
+    if filename not in available_files:
+        raise HTTPException(404, "Action file not found")
+
+    return FileResponse(available_files[filename])
 
 
 def _cat_emoji(cat: str) -> str:

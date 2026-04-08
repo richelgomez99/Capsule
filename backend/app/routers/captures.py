@@ -31,7 +31,7 @@ async def upload_screenshot(file: UploadFile = File(...)):
 
     contents = await file.read()
     if len(contents) > MAX_FILE_SIZE:
-        raise HTTPException(400, f"File too large. Maximum size is {MAX_FILE_SIZE // (1024*1024)} MB.")
+        raise HTTPException(400, f"File too large ({len(contents) // (1024*1024)} MB). Maximum size is {MAX_FILE_SIZE // (1024*1024)} MB. Try compressing or resizing the image.")
 
     # Save file
     cap_id = f"cap_{uuid.uuid4().hex[:8]}"

@@ -94,9 +94,11 @@ export const FEED_TYPES: Record<string, { emoji: string; colorVar: string; label
 };
 
 export const STREAM_TYPES: Record<string, string> = {
+  CLASSIFY: "🧠",
   AIRIA: "🧠",
   CAPTURE: "📥",
   DLP: "🛡️",
+  SCORING: "📊",
   BRAINTRUST: "📊",
   REFLECTION: "🔄",
   SYNTHESIS: "💡",

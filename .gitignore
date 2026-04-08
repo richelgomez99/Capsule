@@ -29,6 +29,9 @@ output/actions/
 data/uploads/
 data/actions/
 *.db
+*.db-shm
+*.db-wal
+*.db-journal
 
 # Archives
 *.zip
